@@ -1,14 +1,12 @@
 name: ncigrafana
 
 channels:
-    - coecms
     - conda-forge
     - defaults
 
 dependencies:
     - python
     - sqlite
-    - dataset
     - pandas
     - matplotlib
     - numpy
