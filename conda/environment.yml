@@ -5,6 +5,8 @@ channels:
     - defaults
 
 dependencies:
+    - anaconda-client
+    - conda-build
     - python
     - sqlite
     - pandas
