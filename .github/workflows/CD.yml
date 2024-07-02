@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches:
-        - CD
+        - master
 
 env:
   PY_VERSION: 3.12
