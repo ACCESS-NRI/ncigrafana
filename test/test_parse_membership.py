@@ -24,6 +24,7 @@ verbose = False
 def db():
     project = 'xx00'
     dbfile = "sqlite:///:memory:"
+    #dbfile = "postgresql://postgres:postgres@localhost:5432/ncigrafana_test"
     return ProjectDataset(project, dbfile)
 
 def test_parse_membership(db):
