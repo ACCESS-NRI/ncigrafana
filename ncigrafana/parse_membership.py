@@ -40,7 +40,7 @@ def parse_membership(filename, verbose, db=None, dburl=None):
 
         print("Parsing {file}".format(file=filename))
 
-        # read 3 lines in membership dump file
+        # read first line in membership dump file
         header = f.readline()
         if verbose: print("> ", header)
         
