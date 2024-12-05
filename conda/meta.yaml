@@ -26,11 +26,13 @@ requirements:
         - parse_account_usage_data = ncigrafana.parse_account_usage_data:main_argv
         - nci_account_json = ncigrafana.nci_account:main_argv
         - parse_lquota_data = ncigrafana.parse_lquota:main_argv
+        - parse_membership_data = ncigrafana.parse_membership:main_argv
     has_prefix_files:
         - bin/parse_user_storage_data
         - bin/parse_account_usage_data
         - bin/nci_account_json
         - bin/parse_lquota_data
+        - bin/parse_membership_data
 
 test:
     imports:

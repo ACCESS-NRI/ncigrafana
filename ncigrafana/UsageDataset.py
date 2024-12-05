@@ -643,3 +643,25 @@ class ProjectDataset(object):
                                quarter, 
                                storagept=storagepoint, 
                                datafield=measure).ix[-1].sort_values(ascending=False).head(count).divide(scale)
+
+    def addprojectmembership(self, project, system, date, members_list, members_count):
+        """
+        Add an entry to record project membership
+        """
+        # need to lookup ids of, or create entries for project_id and system_id
+        project_id = self.addproject(project)
+        system_id = self.addsystem(system)
+
+        # not strictly needed by foreign key constraint
+        for member in members_list:
+            self.adduser(member)
+
+        # would prefer array, but not supported in dataset library
+        members_csv = ",".join(members_list)
+
+        data = dict(project_id=project_id,
+                    system_id=system_id,
+                    date=date.date(),
+                    members=members_csv,
+                    members_count=members_count)
+        return self.db['ProjectMembership'].upsert(data, ['project_id', 'system_id', 'date', 'members', 'members_list'])
