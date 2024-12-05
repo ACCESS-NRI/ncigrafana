@@ -31,7 +31,7 @@ jobs:
           show-channel-urls: true
 
       - name: Build and upload the conda package
-        uses: uibcdf/action-build-and-upload-conda-packages@vd72a2d950af55243bbc385185dd68b824211192d #v1.3.0
+        uses: uibcdf/action-build-and-upload-conda-packages@d72a2d950af55243bbc385185dd68b824211192d #v1.3.0
         with:
           meta_yaml_dir: conda
           python-version: ${{ env.PY_VERSION }}
