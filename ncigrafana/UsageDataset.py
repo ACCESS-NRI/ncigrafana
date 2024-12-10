@@ -664,4 +664,4 @@ class ProjectDataset(object):
                     date=date.date(),
                     members=members_csv,
                     members_count=members_count)
-        return self.db['ProjectMembership'].upsert(data, ['project_id', 'system_id', 'date', 'members', 'members_list'])
+        return self.db['ProjectMembership'].upsert(data, ['project_id', 'system_id', 'date'])

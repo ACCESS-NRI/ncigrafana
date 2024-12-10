@@ -40,3 +40,22 @@ def test_parse_membership(db):
     
     membership_record = db.db["ProjectMembership"].find_one(project_id=project_id, date=datetime.date(2024,12,3))
     assert len(membership_record["members"].split(",")) == 3
+
+
+def test_parse_membership_upsert_funcationality(db):
+
+    parse_membership('test/2024-12-03T11:09:28.au88.membership.dump', verbose=verbose, db=db)
+
+    assert db.db["Users"].count() == 3
+    assert db.db["Users"].find_one(user='test581')
+    assert db.db["Projects"].find_one(project='au88')
+
+    project_id = db.db["Projects"].find_one(project='au88')['id']
+    assert db.db["ProjectMembership"].find_one(project_id=project_id, date=datetime.date(2024,12,3))
+    
+    membership_record = db.db["ProjectMembership"].find_one(project_id=project_id, date=datetime.date(2024,12,3))
+    assert len(membership_record["members"].split(",")) == 3
+
+    parse_membership('test/2024-12-03T11:09:28.au88.membership.upsert.dump', verbose=verbose, db=db)
+    membership_record = db.db["ProjectMembership"].find_one(project_id=project_id, date=datetime.date(2024,12,3))
+    assert len(membership_record["members"].split(",")) == 4
