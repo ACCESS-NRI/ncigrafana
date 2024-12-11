@@ -42,7 +42,7 @@ def test_parse_membership(db):
     assert len(membership_record["members"].split(",")) == 3
 
 
-def test_parse_membership_upsert_funcationality(db):
+def test_parse_membership_upsert_functionality(db):
 
     parse_membership('test/2024-12-03T11:09:28.au88.membership.dump', verbose=verbose, db=db)
 
