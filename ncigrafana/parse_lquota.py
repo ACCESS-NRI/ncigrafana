@@ -54,20 +54,30 @@ def parse_lquota(filename, verbose, db=None, dburl=None):
             if verbose: print("> ",line)
             if line.startswith("%%%%%%%%%%%%%%%%"):
                 # Grab date string
-                date = datetime.datetime.strptime(f.readline().strip(os.linesep), 
+                date = datetime.datetime.strptime(f.readline().strip(os.linesep),
                                                   "%a %b %d %H:%M:%S %Z %Y")
                 year, quarter = datetoyearquarter(date)
                 startdate, enddate = date_range_from_quarter(year,quarter)
                 db.addquarter(year, quarter, startdate, enddate)
                 continue
 
-            if line.lstrip().startswith("fs") and line.rstrip().endswith("iLimit"): 
+            if line.lstrip().startswith("fs") and line.rstrip().endswith("iLimit"):
                 # Gobble the other header
                 line = f.readline()
                 parsing_usage = True
                 continue
 
             if parsing_usage:
+
+
+                """
+                It seems situation can occour where lquota contains a debug message like:
+                Could not fetch quota information for cj50 on gdata. Please try again later.
+                """
+                if line.lstrip().startswith("Could not fetch quota information"):
+                    if verbose: print(f'Unformatted line: {line}')
+                    continue
+
 
                 if line.startswith('-----------'):
                     if verbose: print('Finished parsing short usage')
@@ -104,15 +114,15 @@ def parse_lquota(filename, verbose, db=None, dburl=None):
                 db.addprojectstorage(project, system, storagepoint, date, size, inodes)
 
                 storagetype = 'capacity'
-                if verbose: print('Add project storage grant', project, system, storagepoint, scheme, 
+                if verbose: print('Add project storage grant', project, system, storagepoint, scheme,
                                    year, quarter, date, storagetype, size_quota)
-                db.addstoragegrant(project, system, storagepoint, scheme, year, quarter, 
+                db.addstoragegrant(project, system, storagepoint, scheme, year, quarter,
                                            str(date.date()), storagetype, size_quota)
 
                 storagetype = 'inodes'
-                if verbose: print('Add project storage grant', project, system, storagepoint, scheme, 
+                if verbose: print('Add project storage grant', project, system, storagepoint, scheme,
                                    year, quarter, date, storagetype, inodes_quota)
-                db.addstoragegrant(project, system, storagepoint, scheme, year, quarter, 
+                db.addstoragegrant(project, system, storagepoint, scheme, year, quarter,
                                            str(date.date()), storagetype, inodes_quota)
 
 """

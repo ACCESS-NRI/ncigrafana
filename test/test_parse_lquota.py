@@ -13,9 +13,9 @@ import time
 
 from ncigrafana.UsageDataset import *
 from ncigrafana.DBcommon import datetoyearquarter
-from ncigrafana.parse_lquota import parse_lquota 
+from ncigrafana.parse_lquota import parse_lquota
 
-# Set acceptable time zone strings so we can parse the 
+# Set acceptable time zone strings so we can parse the
 # AEST timezone in the test file
 os.environ['TZ'] = 'AEST-10AEDT-11,M10.5.0,M3.5.0'
 time.tzset()
@@ -32,6 +32,10 @@ def db():
 def test_parse_lquota(db):
 
     parse_lquota('test/lquota.log', verbose=verbose, db=db)
+
+def test_parse_lquota_with_format_error(db):
+
+    parse_lquota('test/lquota_with_error.log', verbose=verbose, db=db)
 
 def test_getstoragepoints(db):
 

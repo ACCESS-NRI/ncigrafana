@@ -16,7 +16,7 @@ from ncigrafana.UsageDataset import *
 from ncigrafana.DBcommon import datetoyearquarter
 from ncigrafana.parse_user_storage_data import parse_file_report
 
-# Set acceptable time zone strings so we can parse the 
+# Set acceptable time zone strings so we can parse the
 # AEST timezone in the test file
 os.environ['TZ'] = 'AEST-10AEDT-11,M10.5.0,M3.5.0'
 time.tzset()
@@ -30,10 +30,16 @@ def db():
     # dbfile = "sqlite:///usage.db"
     return ProjectDataset(project,dbfile)
 
-def test_parse_lquota(db):
+def test_parse_user_storage(db):
 
     parse_file_report('test/2022-11-02T11:36:45.w40.scratch.json', verbose=verbose, db=db)
     parse_file_report('test/2022-11-02T11:36:45.w40.gdata.json', verbose=verbose, db=db)
+
+
+def test_parse_user_storage_with_error(db):
+
+    parse_file_report('test/2022-11-02T11:36:45.w40.gdata.bad-json', verbose=verbose, db=db)
+
 
 def test_getstoragepoints(db):
 
@@ -62,7 +68,7 @@ def test_getstorage(db):
     dp = db.getstorage(scratch_project, year, quarter, system, storagepoint, namefield='user')
     assert(len(dp) == 33)
     #assert((dp.iloc[0,:].values == [837124096., 654982688768., 5983174656.,
-    #                                81819126988.8000030517578125, 1897922560., 
+    #                                81819126988.8000030517578125, 1897922560.,
     #                                40531821149388.796875]).all())
     ### if gid_available is false, the ordering of this array will change
     if gid_available:
