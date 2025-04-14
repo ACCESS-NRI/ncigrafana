@@ -48,14 +48,18 @@ def parse_file_report(filename, verbose, db=None, dburl=None):
         system = 'gadi'
 
     with open(filename) as f:
-        all_data=json.loads(f.read())
-        
+        try:
+            all_data=json.loads(f.read())
+        except json.JSONDecodeError as e:
+            print(f"Error parsing {filename}: {e}")
+            return
+
     ### Grab timestamp - pretend there are no cross-quarter entries
     datestamp = datetime.datetime.fromisoformat(all_data[0]["scan_time"])
     year, quarter = datetoyearquarter(datestamp)
     startdate, enddate = date_range_from_quarter(year,quarter)
     db.addquarter(year,quarter,startdate,enddate)
-    
+
     for entry in all_data:
         ### Handle uids that don't exist
         try:
@@ -65,8 +69,8 @@ def parse_file_report(filename, verbose, db=None, dburl=None):
         db.adduser(user)
 
         if storagepoint == 'scratch':
-        # Swap folder and proj in the case of scratch as it is now accounted for by 
-        # location, so folder never changes but project code can and subsequent entries 
+        # Swap folder and proj in the case of scratch as it is now accounted for by
+        # location, so folder never changes but project code can and subsequent entries
         # overwrite previous ones unless values of folder and proj are swapped
             ### Handle gids that don't exist
             try:

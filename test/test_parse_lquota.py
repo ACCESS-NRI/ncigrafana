@@ -35,7 +35,7 @@ def test_parse_lquota(db):
 
 def test_parse_lquota_with_format_error(db):
 
-    parse_lquota('test/lquota_with_error.log', verbose=verbose, db=db)
+    parse_lquota('test/lquota.bad-log', verbose=verbose, db=db)
 
 def test_getstoragepoints(db):
 
