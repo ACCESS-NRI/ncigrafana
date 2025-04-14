@@ -48,6 +48,10 @@ def parse_file_report(filename, verbose, db=None, dburl=None):
         system = 'gadi'
 
     with open(filename) as f:
+        """
+        Any kind of permission issue will produce an empty json file. This fails and causes
+        subsequent files to be skipped. So we need to check for this and skip the file if it is empty.
+        """
         try:
             all_data=json.loads(f.read())
         except json.JSONDecodeError as e:
