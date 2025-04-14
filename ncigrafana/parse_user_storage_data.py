@@ -55,7 +55,7 @@ def parse_file_report(filename, verbose, db=None, dburl=None):
         try:
             all_data=json.loads(f.read())
         except json.JSONDecodeError as e:
-            print(f"Error parsing {filename}: {e}")
+            print(f"Error parsing {filename}: {e}", file=sys.stderr)
             return
 
     ### Grab timestamp - pretend there are no cross-quarter entries

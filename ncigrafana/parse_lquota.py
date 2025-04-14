@@ -21,12 +21,9 @@ limitations under the License.
 from __future__ import print_function
 
 import argparse
-import pwd
 import datetime
 import os
 import sys
-import re
-import shutil
 from .UsageDataset import *
 from .DBcommon import extract_num_unit, parse_size, mkdir, archive
 from .DBcommon import datetoyearquarter, date_range_from_quarter
@@ -75,7 +72,7 @@ def parse_lquota(filename, verbose, db=None, dburl=None):
                 Could not fetch quota information for cj50 on gdata. Please try again later.
                 """
                 if line.lstrip().startswith("Could not fetch quota information"):
-                    if verbose: print(f'Unformatted line: {line}')
+                    print(f'Unformatted line: {line}', file=sys.stderr)
                     continue
 
 

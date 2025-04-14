@@ -2,13 +2,10 @@
 
 from __future__ import print_function
 
-import datetime
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 from numpy import arange
 import os
-import pandas as pd
 import pytest
-import sys
 import time
 import grp
 
@@ -36,10 +33,11 @@ def test_parse_user_storage(db):
     parse_file_report('test/2022-11-02T11:36:45.w40.gdata.json', verbose=verbose, db=db)
 
 
-def test_parse_user_storage_with_error(db):
+def test_parse_user_storage_with_error(db, capsys):
 
     parse_file_report('test/2022-11-02T11:36:45.w40.gdata.bad-json', verbose=verbose, db=db)
-
+    captured = capsys.readouterr()
+    assert "Error parsing test/2022-11-02T11:36:45.w40.gdata.bad-json" in captured.err
 
 def test_getstoragepoints(db):
 
