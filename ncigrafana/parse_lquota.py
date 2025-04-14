@@ -71,7 +71,7 @@ def parse_lquota(filename, verbose, db=None, dburl=None):
 
 
                 """
-                It seems situation can occour where lquota contains a debug message like:
+                It seems situation can occur where lquota contains a debug message like:
                 Could not fetch quota information for cj50 on gdata. Please try again later.
                 """
                 if line.lstrip().startswith("Could not fetch quota information"):
