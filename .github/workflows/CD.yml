@@ -35,5 +35,4 @@ jobs:
         with:
           meta_yaml_dir: conda
           user: accessnri
-          label: main
           token: ${{ secrets.anaconda_token }}
