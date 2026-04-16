@@ -5,6 +5,7 @@ from __future__ import print_function
 import pytest
 import sys
 import pandas as pd
+from unittest.mock import patch, Mock
 
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 from numpy import arange
@@ -53,6 +54,53 @@ def test_adduser(db):
     record = db.getuser(user)
     assert( record['user'] == user )
     assert( record['fullname'] == user )
+
+
+def test_adduser_update_missing_data(db):
+    # Add a user to the database
+    user = "abc123"
+    db.adduser(user)
+    record = db.getuser(user)
+    assert record.get('user') == user
+    assert record.get('fullname') == user
+    assert record.get('uid') == -1
+    assert record.get('gid') == -1
+    previous_id = record['id']
+
+    # Try adding same user again - expect no change with KeyError
+    id = db.adduser(user)
+    assert id == previous_id
+    record = db.getuser(user)
+    assert record.get('id') == previous_id
+    assert record.get('user') == user
+    assert record.get('fullname') == user
+    assert record.get('uid') == -1
+    assert record.get('gid') == -1
+
+    # Patch getpwnam to return user information and check missing information is updated
+    with patch('ncigrafana.UsageDataset.getpwnam') as mock_getpwnam:
+        mock_struct_passwd = Mock()
+        mock_struct_passwd.pw_gecos = 'Abc Xyz'
+        mock_struct_passwd.pw_uid = 1001
+        mock_struct_passwd.pw_gid = 101
+        mock_getpwnam.return_value = mock_struct_passwd
+
+        id = db.adduser(user)
+        assert id == previous_id
+
+        record = db.getuser(user)
+        assert record.get('id') == previous_id
+        assert record.get('user') == user
+        assert record.get('fullname') == 'Abc Xyz'
+        assert record.get('uid') == 1001
+        assert record.get('gid') == 101
+
+        # Check adduser does not call getpwnam again when there's no missing information
+        mock_getpwnam.reset_mock()
+        id = db.adduser(user)
+        assert id == previous_id
+        mock_getpwnam.assert_not_called()
+
 
 def test_addquarter(db):
     year = 1984; month = 7; day = 1 

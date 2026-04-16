@@ -60,6 +60,18 @@ class ProjectDataset(object):
                     gid = -1
             data = dict(user=user, uid=uid, gid=gid, fullname=fullname)
             id = self.db['Users'].upsert(data, list(data.keys()))
+        elif q['uid'] == -1 or q['gid'] == -1:
+            id = q['id']
+            # Try update user information if it was missing
+            try:
+                passwd = getpwnam(user)
+                fullname = passwd.pw_gecos
+                uid = passwd.pw_uid
+                gid = passwd.pw_gid
+                data = dict(id=id, user=user, uid=uid, gid=gid, fullname=fullname)
+                self.db['Users'].upsert(data, ['id', 'user'])
+            except KeyError:
+                pass
         else:
             id = q['id']
         return id
