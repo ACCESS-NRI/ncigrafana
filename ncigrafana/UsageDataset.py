@@ -69,7 +69,7 @@ class ProjectDataset(object):
                 uid = passwd.pw_uid
                 gid = passwd.pw_gid
                 data = dict(id=id, user=user, uid=uid, gid=gid, fullname=fullname)
-                self.db['Users'].upsert(data, ['id', 'user'])
+                self.db['Users'].update(data, ['id'])
             except KeyError:
                 pass
         else:
